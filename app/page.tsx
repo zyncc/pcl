@@ -13,6 +13,8 @@ import {
 import charity from "@/public/charity.jpg";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const causes = await prisma.cause.findMany({
     where: {
