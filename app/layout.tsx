@@ -11,9 +11,8 @@ export const metadata: Metadata = {
 };
 
 const poppins = Poppins({
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   style: ["italic", "normal"],
-  preload: true,
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
