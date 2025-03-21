@@ -79,10 +79,7 @@ export function DonationForm({ causeId }: { causeId: string }) {
           setLoading(false);
         },
       },
-      callback_url:
-        process.env.NODE_ENV == "development"
-          ? `http://localhost:3000/success?id=${id}`
-          : `https://tuna-darling-overly.ngrok-free.app/success?id=${id}`,
+      callback_url: process.env.NEXT_PUBLIC_APP_URL + "/success?id=" + id,
       allow_rotation: false,
       retry: {
         enabled: true,
