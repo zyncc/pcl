@@ -190,7 +190,7 @@ export default function AboutPage() {
             ].map((member, index) => (
               <Card key={index} className="overflow-hidden">
                 <Image
-                  src={member.image || "/placeholder.svg"}
+                  src={member.image || "https://placehold.co/300"}
                   alt={member.name}
                   width={300}
                   height={300}
@@ -334,7 +334,7 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/donate">Make a Donation</Link>
+              <Link href="/causes">Make a Donation</Link>
             </Button>
             <Button
               size="lg"

@@ -260,7 +260,7 @@ export default function VolunteerPage() {
             ].map((volunteer, index) => (
               <Card key={index} className="overflow-hidden">
                 <Image
-                  src={volunteer.image || "/placeholder.svg"}
+                  src={volunteer.image || "https://placehold.co/300"}
                   alt={volunteer.name}
                   width={300}
                   height={300}
@@ -318,7 +318,7 @@ export default function VolunteerPage() {
               <Card key={index} className="overflow-hidden">
                 <div className="relative">
                   <Image
-                    src={event.image || "/placeholder.svg"}
+                    src={event.image || "https://placehold.co/300x200"}
                     alt={event.title}
                     width={300}
                     height={200}

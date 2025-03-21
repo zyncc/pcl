@@ -4,7 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import { Footer } from "@/components/footer";
 import { MainNav } from "@/components/main-nav";
-
+import { Toaster } from "sonner";
 export const metadata: Metadata = {
   title: "Donate to the Needy",
   description: "Charity for the Poor People",
@@ -38,6 +38,7 @@ export default function RootLayout({
             </div>
           </header>
           <main className="flex-1">{children}</main>
+          <Toaster richColors position="top-right" />
           <Footer />
         </div>
       </body>

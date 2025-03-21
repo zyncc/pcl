@@ -4,11 +4,11 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DialogTitle } from "./ui/dialog";
+import { authClient } from "@/lib/auth-client";
 
 const routes = [
   {
@@ -32,22 +32,42 @@ const routes = [
 export function MainNav() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
-
+  const { data: session } = authClient.useSession();
   return (
     <div className="flex items-center gap-6">
       <nav className="hidden md:flex items-center gap-6">
-        {routes.map((route) => (
-          <Link
-            key={route.href}
-            href={route.href}
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-primary",
-              pathname === route.href ? "text-primary" : "text-muted-foreground"
-            )}
-          >
-            {route.label}
-          </Link>
-        ))}
+        {routes.map((route) => {
+          if (route.href === "/login" && session?.session) {
+            return (
+              <Link
+                key={"/account"}
+                href={"/account"}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-primary",
+                  pathname === "/account"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                )}
+              >
+                Account
+              </Link>
+            );
+          }
+          return (
+            <Link
+              key={route.href}
+              href={route.href}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-primary",
+                pathname === route.href
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              )}
+            >
+              {route.label}
+            </Link>
+          );
+        })}
       </nav>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <DialogTitle className="hidden">Menu</DialogTitle>
@@ -57,7 +77,7 @@ export function MainNav() {
             <span className="sr-only">Toggle menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="right">
+        <SheetContent side="right" className="px-6">
           <nav className="flex flex-col gap-4 mt-8">
             {routes.map((route) => (
               <Link
@@ -84,7 +104,7 @@ export function MainNav() {
           size="sm"
           className="bg-primary text-primary-foreground hover:bg-primary/90"
         >
-          <Link href="/donate">Donate Now</Link>
+          <Link href="/causes">Donate Now</Link>
         </Button>
       </div>
     </div>

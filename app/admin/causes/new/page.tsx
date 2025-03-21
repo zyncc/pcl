@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { Calendar, Save, X } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +34,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { causeFormSchema, type CauseFormValues } from "@/lib/zodSchemas";
+import { CreateCause } from "@/actions/Causes";
+import { toast } from "sonner";
 
 export default function NewCausePage() {
   const router = useRouter();
@@ -56,13 +57,17 @@ export default function NewCausePage() {
     },
   });
 
-  function onSubmit(data: CauseFormValues) {
+  async function onSubmit(data: CauseFormValues) {
     setIsSubmitting(true);
-    console.log(data);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      router.push("/admin/causes");
-    }, 1000);
+    toast.promise(CreateCause(data), {
+      loading: "Creating cause...",
+      success: () => {
+        form.reset();
+        return "Cause created successfully!";
+      },
+      error: "Failed to create cause",
+    });
+    setIsSubmitting(false);
   }
 
   return (
@@ -109,7 +114,6 @@ export default function NewCausePage() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="category"
@@ -125,7 +129,7 @@ export default function NewCausePage() {
                           <SelectValue placeholder="Select a category" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="w-full">
                         <SelectItem value="education">Education</SelectItem>
                         <SelectItem value="healthcare">Healthcare</SelectItem>
                         <SelectItem value="water">Water</SelectItem>

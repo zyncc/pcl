@@ -81,7 +81,7 @@ export const registerFormSchema = z
       .min(2, { message: "First name must be at least 2 characters" }),
     lastName: z
       .string()
-      .min(2, { message: "Last name must be at least 2 characters" }),
+      .min(1, { message: "Last name must be at least 1 characters" }),
     email: z.string().email({ message: "Please enter a valid email address" }),
     password: z
       .string()
@@ -89,9 +89,6 @@ export const registerFormSchema = z
     confirmPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" }),
-    terms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms and conditions",
-    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -113,8 +110,8 @@ export const causeFormSchema = z.object({
   location: z.string().min(2, { message: "Location is required" }),
   startDate: z.date(),
   endDate: z.date(),
-  featured: z.boolean().optional(),
-  image: z.string().optional(),
+  featured: z.boolean(),
+  image: z.string(),
 });
 
 export type CauseFormValues = z.infer<typeof causeFormSchema>;

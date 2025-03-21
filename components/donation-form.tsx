@@ -17,11 +17,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { donationFormSchema, type DonationFormValues } from "@/lib/zodSchemas";
-import { FormSuccess } from "./form-success";
+import { toast } from "sonner";
+import { CreateRazorpayOrder } from "@/actions/CreateRazorpayOrder";
+import { RazorpayOrderOptions, useRazorpay } from "react-razorpay";
+import { CreateDonation } from "@/actions/Causes";
 
-export function DonationForm() {
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-
+export function DonationForm({ causeId }: { causeId: string }) {
+  const { Razorpay } = useRazorpay();
+  const [loading, setLoading] = React.useState(false);
   const form = useForm<DonationFormValues>({
     resolver: zodResolver(donationFormSchema),
     defaultValues: {
@@ -47,23 +50,51 @@ export function DonationForm() {
     form.setValue("amount", "custom");
   };
 
-  function onSubmit(data: DonationFormValues) {
-    console.log(data);
-    setIsSubmitted(true);
-  }
-
-  if (isSubmitted) {
-    return (
-      <FormSuccess
-        title="Thank You for Your Donation!"
-        description="Your generosity will make a real difference in the lives of those we serve. You will receive a confirmation email shortly."
-        buttonText="Make Another Donation"
-        onReset={() => {
-          form.reset();
-          setIsSubmitted(false);
-        }}
-      />
-    );
+  async function onSubmit(data: DonationFormValues) {
+    setLoading(true);
+    const finalAmount =
+      data.amount && data.amount !== "custom"
+        ? Number(data.amount)
+        : Number(data.customAmount);
+    const id = await CreateRazorpayOrder(finalAmount);
+    if (!id) {
+      toast.error("Failed to Process Order", {
+        duration: 3000,
+      });
+      return null;
+    }
+    const options: RazorpayOrderOptions = {
+      key: process.env.RAZORPAY_KEY_ID as string,
+      amount: Number(data.amount) * 100,
+      currency: "INR",
+      name: "Aira",
+      order_id: id,
+      modal: {
+        backdropclose: false,
+        escape: false,
+        handleback: false,
+        confirm_close: true,
+        animation: true,
+        ondismiss() {
+          setLoading(false);
+        },
+      },
+      callback_url:
+        process.env.NODE_ENV == "development"
+          ? `http://localhost:3000/success?id=${id}`
+          : `https://tuna-darling-overly.ngrok-free.app/success?id=${id}`,
+      allow_rotation: false,
+      retry: {
+        enabled: true,
+      },
+      remember_customer: true,
+      theme: {
+        hide_topbar: false,
+      },
+    };
+    const razorpayInstance = new Razorpay(options);
+    await CreateDonation(data, causeId, id);
+    razorpayInstance.open();
   }
 
   return (
@@ -148,10 +179,9 @@ export function DonationForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full gap-2">
+        <Button disabled={loading} type="submit" className="w-full gap-2">
           <CreditCard className="h-4 w-4" /> Proceed to Payment
         </Button>
-
         <div className="text-center text-xs text-muted-foreground">
           <p>
             Your payment information is secure. We use encryption to protect

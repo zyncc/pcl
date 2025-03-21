@@ -8,7 +8,106 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
-  name  String?
+  id            String     @id @map("_id")
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  phone         String?
+  sessions      Session[]
+  accounts      Account[]
+  donations     Donation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @map("_id")
+  expiresAt DateTime
+  token     String
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @map("_id")
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @map("_id")
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("verification")
+}
+
+model Cause {
+  id              String     @id @map("_id")
+  title           String
+  category        String
+  description     String
+  longDescription String
+  donors          Int
+  goal            Int
+  raised          Int
+  location        String
+  startDate       DateTime
+  endDate         DateTime
+  featured        Boolean
+  image           String?
+  donations       Donation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cause")
+}
+
+model Donation {
+  id              String  @id @map("_id")
+  razorPayOrderId String  @unique
+  paymentId       String?
+  paymentStatus   Boolean @default(false)
+  amount          Int
+  causeId         String
+  cause           Cause   @relation(fields: [causeId], references: [id])
+  userId          String
+  user            User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("donation")
 }

@@ -10,12 +10,23 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import charity from "@/public/charity.jpg";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const causes = await prisma.cause.findMany({
+    where: {
+      featured: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 4,
+  });
   return (
     <div className="flex flex-col">
       <section className="relative py-20 md:py-28 bg-gradient-to-r from-primary/10 to-primary/5">
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 container mx-auto">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 container mx-auto px-3">
           <div className="flex-1 space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Your Kindness Can{" "}
@@ -27,7 +38,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" asChild>
-                <Link href="/donate">Donate Now</Link>
+                <Link href="/causes">Donate Now</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
                 <Link href="/causes">Explore Causes</Link>
@@ -36,12 +47,13 @@ export default function Home() {
           </div>
           <div className="flex-1 relative">
             <Image
-              src="https://placehold.co/600x400"
+              src={charity}
               alt="Children smiling"
+              placeholder="blur"
+              priority
               width={600}
               height={400}
               className="rounded-lg shadow-lg"
-              priority
             />
           </div>
         </div>
@@ -77,41 +89,11 @@ export default function Home() {
               the lives of those in need across India.
             </p>
           </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                title: "Education for All",
-                image: "https://placehold.co/300x200",
-                raised: 850000,
-                goal: 1500000,
-                slug: "education-for-all",
-              },
-              {
-                title: "Clean Water Initiative",
-                image: "https://placehold.co/300x200",
-                raised: 1200000,
-                goal: 2000000,
-                slug: "clean-water-initiative",
-              },
-              {
-                title: "Rural Healthcare",
-                image: "https://placehold.co/300x200",
-                raised: 750000,
-                goal: 1800000,
-                slug: "rural-healthcare",
-              },
-              {
-                title: "Flood Relief",
-                image: "https://placehold.co/300x200",
-                raised: 950000,
-                goal: 1200000,
-                slug: "flood-relief",
-              },
-            ].map((cause, index) => (
+            {causes.map((cause, index) => (
               <Card key={index} className="overflow-hidden">
                 <Image
-                  src={cause.image || "/placeholder.svg"}
+                  src={cause.image || "https://placehold.co/300x200"}
                   alt={cause.title}
                   width={300}
                   height={200}
@@ -139,7 +121,7 @@ export default function Home() {
                     </div>
                   </div>
                   <Button asChild className="w-full">
-                    <Link href={`/causes/${cause.slug}`}>Donate Now</Link>
+                    <Link href={`/causes/${cause.id}`}>Donate Now</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -164,7 +146,7 @@ export default function Home() {
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-background">
+            <Card className="bg-background py-6">
               <CardContent className="pt-6 text-center space-y-4">
                 <div className="mx-auto bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center">
                   <Heart className="h-8 w-8 text-primary" />
@@ -176,7 +158,7 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-background">
+            <Card className="bg-background py-6">
               <CardContent className="pt-6 text-center space-y-4">
                 <div className="mx-auto bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center">
                   <Users className="h-8 w-8 text-primary" />
@@ -188,7 +170,7 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
-            <Card className="bg-background">
+            <Card className="bg-background py-6">
               <CardContent className="pt-6 text-center space-y-4">
                 <div className="mx-auto bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center">
                   <BarChart3 className="h-8 w-8 text-primary" />
@@ -377,7 +359,7 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/donate">Donate Now</Link>
+              <Link href="/causes">Donate Now</Link>
             </Button>
             <Button
               size="lg"

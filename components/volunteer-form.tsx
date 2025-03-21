@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Calendar } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,11 +34,8 @@ import {
   volunteerFormSchema,
   type VolunteerFormValues,
 } from "@/lib/zodSchemas";
-import { FormSuccess } from "@/components/form-success";
 
 export function VolunteerForm() {
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-
   const form = useForm<VolunteerFormValues>({
     resolver: zodResolver(volunteerFormSchema),
     defaultValues: {
@@ -64,21 +60,6 @@ export function VolunteerForm() {
 
   function onSubmit(data: VolunteerFormValues) {
     console.log(data);
-    setIsSubmitted(true);
-  }
-
-  if (isSubmitted) {
-    return (
-      <FormSuccess
-        title="Thank You for Your Interest!"
-        description="We've received your volunteer application. Our volunteer coordinator will contact you within 3-5 business days to discuss next steps."
-        buttonText="Submit Another Application"
-        onReset={() => {
-          form.reset();
-          setIsSubmitted(false);
-        }}
-      />
-    );
   }
 
   return (

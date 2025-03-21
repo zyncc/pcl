@@ -1,10 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { Send } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,11 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { contactFormSchema, type ContactFormValues } from "@/lib/zodSchemas";
-import { FormSuccess } from "@/components/form-success";
 
 export function ContactForm() {
-  const [isSubmitted, setIsSubmitted] = React.useState(false);
-
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -43,21 +38,6 @@ export function ContactForm() {
 
   function onSubmit(data: ContactFormValues) {
     console.log(data);
-    setIsSubmitted(true);
-  }
-
-  if (isSubmitted) {
-    return (
-      <FormSuccess
-        title="Message Sent!"
-        description="Thank you for contacting us. We'll get back to you as soon as possible, usually within 24-48 hours."
-        buttonText="Send Another Message"
-        onReset={() => {
-          form.reset();
-          setIsSubmitted(false);
-        }}
-      />
-    );
   }
 
   return (

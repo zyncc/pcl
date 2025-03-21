@@ -38,7 +38,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="py-6">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Donations
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="py-6">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Donors</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
@@ -72,7 +72,7 @@ export default function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="py-6">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Causes</CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="py-6">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Conversion Rate
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
           <TabsTrigger value="causes">Active Causes</TabsTrigger>
         </TabsList>
         <TabsContent value="recent" className="space-y-4">
-          <Card>
+          <Card className="py-6">
             <CardHeader>
               <CardTitle>Recent Donations</CardTitle>
               <CardDescription>
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
         <TabsContent value="causes" className="space-y-4">
-          <Card>
+          <Card className="py-6">
             <CardHeader>
               <CardTitle>Active Causes</CardTitle>
               <CardDescription>
