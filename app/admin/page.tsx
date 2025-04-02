@@ -33,6 +33,9 @@ export default async function AdminDashboard() {
     include: {
       user: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return (
     <div className="space-y-8 container mx-auto px-3 my-10">
