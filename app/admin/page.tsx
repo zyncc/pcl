@@ -8,7 +8,6 @@ import {
   Plus,
   FileText,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,8 +17,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { prisma } from "@/lib/prisma";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const donations = await prisma.donation.findMany({
+    include: {
+      user: true,
+    },
+  });
   return (
     <div className="space-y-8 container mx-auto px-3 my-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -36,7 +41,6 @@ export default function AdminDashboard() {
           </Link>
         </Button>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="py-6">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -107,7 +111,6 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
-
       <Tabs defaultValue="recent">
         <TabsList>
           <TabsTrigger value="recent">Recent Donations</TabsTrigger>
@@ -123,61 +126,23 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-8">
-                <div className="flex items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Rahul Sharma
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      rahul.sharma@example.com
-                    </p>
+                {donations.map((donation) => (
+                  <div key={donation.id}>
+                    <div className="flex items-center">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium leading-none">
+                          {donation.user.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {donation.user.email}
+                        </p>
+                      </div>
+                      <div className="ml-auto font-medium">
+                        ₹{donation.amount}
+                      </div>
+                    </div>
                   </div>
-                  <div className="ml-auto font-medium">₹5,000</div>
-                </div>
-                <div className="flex items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Priya Patel
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      priya.patel@example.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">₹10,000</div>
-                </div>
-                <div className="flex items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Amit Kumar
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      amit.kumar@example.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">₹2,500</div>
-                </div>
-                <div className="flex items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Neha Singh
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      neha.singh@example.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">₹7,500</div>
-                </div>
-                <div className="flex items-center">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Vikram Mehta
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      vikram.mehta@example.com
-                    </p>
-                  </div>
-                  <div className="ml-auto font-medium">₹15,000</div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>

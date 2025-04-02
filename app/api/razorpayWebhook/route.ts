@@ -34,6 +34,9 @@ export async function POST(req: Request) {
       raised: {
         increment: donation.amount,
       },
+      donors: {
+        increment: 1,
+      },
     },
   });
 
