@@ -18,8 +18,17 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 
 export default async function AdminDashboard() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session?.session) {
+    return notFound();
+  }
   const donations = await prisma.donation.findMany({
     include: {
       user: true,
